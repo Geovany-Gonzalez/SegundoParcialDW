@@ -14,14 +14,18 @@ header h1{ margin:0; font-size:22px; letter-spacing:.2px; }
 footer{ padding:14px 0; margin-top:28px; }
 
 .grid{
-  display:grid; gap:18px;
+  display:grid; gap:20px;
   grid-template-columns: repeat(4, minmax(240px, 1fr));
 }
+.span-2{ grid-column: span 2; }
+
 @media (max-width: 1080px){
-  .grid{ grid-template-columns: repeat(2, minmax(240px, 1fr)); }
+  .grid{ grid-template-columns: repeat(2, minmax(260px, 1fr)); }
+  .span-2{ grid-column: span 2; }
 }
 @media (max-width: 640px){
   .grid{ grid-template-columns: 1fr; }
+  .span-2{ grid-column: span 1; }
 }
 
 .card{
@@ -51,20 +55,21 @@ input::placeholder{ color:#9aa3af; }
 .btn.primary:hover{ filter:brightness(1.05); }
 .btn.small{ padding:8px 12px; border-radius:10px; }
 
+#btn-crear{ min-width:120px; }
+
 .msg{ color:var(--muted); min-height:1.2rem; margin-top:6px; }
 
-.list{ display:flex; flex-direction:column; gap:8px; }
+.list{ display:flex; flex-direction:column; gap:12px; }
 .item{
   display:flex; align-items:center; justify-content:space-between;
-  padding:10px 12px; border:1px dashed var(--line); border-radius:12px; background:#fff;
+  padding:14px 16px; border:1px dashed var(--line); border-radius:12px; background:#fff;
 }
 .badge{
   display:inline-block; padding:4px 10px; border-radius:999px; font-size:12px;
-  background:#eef2ff; color:#3730a3; margin-left:8px;
+  background:#e8f0ff; color:#1e3a8a; margin-left:8px;
 }
 .actions{ display:flex; gap:8px; }
 .actions .btn{ background:var(--accent-2); color:#fff; }
-.actions .btn:hover{ filter:brightness(1.05); }
 
-/* arregla el borde grueso que veías (reset cross-browser) */
+/* quita borde raro cross-browser */
 input[type="text"], input[type="email"], input[type="password"]{ -webkit-appearance:none; appearance:none; }

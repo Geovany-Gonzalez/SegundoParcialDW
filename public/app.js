@@ -1,22 +1,18 @@
-const api = ''; // misma URL
+// En Render, el frontend y la API están en el mismo host:
+const api = '';
 
-let cliente = null; // {id,nombre,email,telefono}
+let cliente = null;
 const $ = (s) => document.querySelector(s);
 const ordenesDiv = $('#ordenes');
 
 async function req(path, opts={}){
   const r = await fetch(path, { headers:{'Content-Type':'application/json'}, ...opts });
-  const text = await r.text();
-  let data = {};
-  try { data = text ? JSON.parse(text) : {}; } catch { data = {}; }
-  if (!r.ok) throw new Error(data.error || 'Error');
-  return data;
+  const t = await r.text(); let d = {};
+  try { d = t ? JSON.parse(t) : {}; } catch { d = {}; }
+  if (!r.ok) throw new Error(d.error || 'Error');
+  return d;
 }
-function nextEstado(est){
-  if (est === 'pending') return 'preparing';
-  if (est === 'preparing') return 'delivered';
-  return null;
-}
+function nextEstado(e){ return e==='pending'?'preparing':(e==='preparing'?'delivered':null); }
 function renderOrdenes(list){
   if (!list.length){ ordenesDiv.innerHTML = '<p class="msg">Sin órdenes</p>'; return; }
   ordenesDiv.innerHTML = '';
@@ -28,24 +24,18 @@ function renderOrdenes(list){
         <strong>${o.plato_nombre}</strong> <span class="badge">${o.estado}</span><br>
         <small>${o.notas || ''}</small>
       </div>
-      <div class="actions"></div>
-    `;
-    const actions = div.querySelector('.actions');
+      <div class="actions"></div>`;
     const next = nextEstado(o.estado);
     if (next){
       const btn = document.createElement('button');
       btn.textContent = 'Avanzar → ' + next;
-      btn.onclick = async ()=>{
-        await req('/ordenes/'+o.id+'/estado', { method:'PUT', body: JSON.stringify({ estado: next }) });
-        await cargarOrdenes();
-      };
-      actions.appendChild(btn);
+      btn.onclick = async ()=>{ await req(`/ordenes/${o.id}/estado`, { method:'PUT', body: JSON.stringify({ estado: next }) }); cargarOrdenes(); };
+      div.querySelector('.actions').appendChild(btn);
     }
     ordenesDiv.appendChild(div);
   }
 }
 
-// Registro
 $('#form-register').addEventListener('submit', async (e)=>{
   e.preventDefault();
   try{
@@ -58,11 +48,10 @@ $('#form-register').addEventListener('submit', async (e)=>{
         contrasena: $('#reg-pass').value
       })
     });
-    $('#reg-msg').textContent = 'Registrado: ' + (data.nombre || '');
+    $('#reg-msg').textContent = 'Registrado: ' + data.nombre;
   }catch(err){ $('#reg-msg').textContent = err.message; }
 });
 
-// Login (email + contraseña)
 $('#form-login').addEventListener('submit', async (e)=>{
   e.preventDefault();
   try{
@@ -73,12 +62,11 @@ $('#form-login').addEventListener('submit', async (e)=>{
         contrasena: $('#log-pass').value
       })
     });
-    $('#login-msg').textContent = 'Hola, ' + (cliente.nombre || '');
-    await cargarOrdenes();
+    $('#login-msg').textContent = 'Hola, ' + cliente.nombre;
+    cargarOrdenes();
   }catch(err){ $('#login-msg').textContent = err.message; }
 });
 
-// Crear orden
 $('#form-orden').addEventListener('submit', async (e)=>{
   e.preventDefault();
   if (!cliente){ $('#orden-msg').textContent = 'Primero inicia sesión'; return; }
@@ -93,7 +81,7 @@ $('#form-orden').addEventListener('submit', async (e)=>{
     });
     $('#orden-msg').textContent = 'Orden #' + data.id + ' creada';
     $('#plato').value=''; $('#notas').value='';
-    await cargarOrdenes();
+    cargarOrdenes();
   }catch(err){ $('#orden-msg').textContent = err.message; }
 });
 

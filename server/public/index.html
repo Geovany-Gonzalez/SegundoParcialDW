@@ -7,18 +7,22 @@
   <link rel="stylesheet" href="styles.css"/>
 </head>
 <body>
-<header><h1>Restaurante - Órdenes</h1></header>
+<header>
+  <div class="container">
+    <h1>Restaurante - Órdenes</h1>
+  </div>
+</header>
 
-<main class="grid">
+<main class="container grid">
   <!-- Registro -->
   <section class="card">
     <h2>Registro de cliente</h2>
-    <form id="form-register">
+    <form id="form-register" class="stack">
       <input id="reg-nombre" placeholder="Nombre" required/>
       <input id="reg-email" type="email" placeholder="Email" required/>
       <input id="reg-tel" placeholder="Teléfono" required/>
       <input id="reg-pass" type="password" placeholder="Contraseña" required/>
-      <button type="submit">Registrar</button>
+      <button type="submit" class="btn primary">Registrar</button>
     </form>
     <div id="reg-msg" class="msg"></div>
   </section>
@@ -26,10 +30,10 @@
   <!-- Login -->
   <section class="card">
     <h2>Login</h2>
-    <form id="form-login">
+    <form id="form-login" class="stack">
       <input id="log-email" type="email" placeholder="Email" required/>
       <input id="log-pass" type="password" placeholder="Contraseña" required/>
-      <button type="submit">Entrar</button>
+      <button type="submit" class="btn primary">Entrar</button>
     </form>
     <div id="login-msg" class="msg"></div>
   </section>
@@ -40,7 +44,7 @@
     <form id="form-orden" class="row">
       <input id="plato" placeholder="Plato" required/>
       <input id="notas" placeholder="Notas (opcional)"/>
-      <button type="submit">Crear</button>
+      <input type="submit" id="btn-crear" class="btn primary" value="Crear"/>
     </form>
     <div id="orden-msg" class="msg"></div>
   </section>
@@ -48,11 +52,18 @@
   <!-- Mis órdenes -->
   <section class="card">
     <h2>Mis órdenes</h2>
-    <div id="ordenes" class="list"></div>
+    <div id="ordenes" class="list">
+      <p class="msg">Sin órdenes</p>
+    </div>
   </section>
 </main>
 
-<footer><small>Demo – Node.js + Express + PostgreSQL</small></footer>
+<footer>
+  <div class="container">
+    <small>Demo – Node.js + Express + PostgreSQL</small>
+  </div>
+</footer>
+
 <script src="app.js"></script>
 </body>
 </html>

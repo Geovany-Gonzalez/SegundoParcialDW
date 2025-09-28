@@ -1,12 +1,15 @@
 // En Render, frontend y API comparten host
 const api = '';
 
-let cliente = null; // {id,nombre,email,telefono}
+let cliente = null;
 const $ = (s) => document.querySelector(s);
 const ordenesDiv = $('#ordenes');
 
 async function req(path, opts = {}) {
-  const r = await fetch(path, { headers: { 'Content-Type': 'application/json' }, ...opts });
+  const r = await fetch(path, {
+    headers: { 'Content-Type': 'application/json' },
+    ...opts
+  });
   const t = await r.text();
   let d = {};
   try { d = t ? JSON.parse(t) : {}; } catch { d = {}; }
@@ -32,7 +35,7 @@ function renderOrdenes(list) {
     div.innerHTML = `
       <div>
         <strong>${o.plato_nombre}</strong>
-        <span class="badge">${o.estado}</span><br>
+        <span class="badge">${o.estado}</span><br/>
         <small>${o.notas || ''}</small>
       </div>
       <div class="actions"></div>
@@ -41,6 +44,7 @@ function renderOrdenes(list) {
     const next = nextEstado(o.estado);
     if (next) {
       const btn = document.createElement('button');
+      btn.className = 'btn small';
       btn.textContent = 'Avanzar → ' + next;
       btn.onclick = async () => {
         try {

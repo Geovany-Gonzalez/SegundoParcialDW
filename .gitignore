@@ -1,0 +1,49 @@
+# === Node / npm ===
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json.*.bak
+
+# === Builds/temps ===
+dist/
+build/
+.tmp/
+.temp/
+coverage/
+.cache/
+.DS_Store
+Thumbs.db
+
+# === Env & secrets (NO subir a Git) ===
+.env
+.env.*
+!*.example          # permite subir .env.example
+
+# === Logs ===
+logs/
+*.log
+*.pid
+*.seed
+*.pid.lock
+
+# === IDE/Editor ===
+.vscode/
+.idea/
+*.iml
+
+# === OS files ===
+*.swp
+*.swo
+
+# === Misc ===
+# dumps o archivos grandes locales (ajusta si usas otros)
+*.bak
+*.tar
+*.tgz
+*.zip
+
+# === Render / Deploy artifacts ===
+# (Render instala dependencias y usa tus fuentes, no subas artefactos locales)
+server/public/*.map

@@ -1,4 +1,4 @@
-const api = ''; // misma URL (frontend servido por Express)
+const api = ''; // misma URL
 
 let cliente = null; // {id,nombre,email,telefono}
 const $ = (s) => document.querySelector(s);
@@ -6,16 +6,17 @@ const ordenesDiv = $('#ordenes');
 
 async function req(path, opts={}){
   const r = await fetch(path, { headers:{'Content-Type':'application/json'}, ...opts });
-  if (!r.ok) throw new Error((await r.json()).error || 'Error');
-  return r.json();
+  const text = await r.text();
+  let data = {};
+  try { data = text ? JSON.parse(text) : {}; } catch { data = {}; }
+  if (!r.ok) throw new Error(data.error || 'Error');
+  return data;
 }
-
 function nextEstado(est){
   if (est === 'pending') return 'preparing';
   if (est === 'preparing') return 'delivered';
   return null;
 }
-
 function renderOrdenes(list){
   if (!list.length){ ordenesDiv.innerHTML = '<p class="msg">Sin órdenes</p>'; return; }
   ordenesDiv.innerHTML = '';
@@ -53,14 +54,15 @@ $('#form-register').addEventListener('submit', async (e)=>{
       body: JSON.stringify({
         nombre: $('#reg-nombre').value.trim(),
         email:  $('#reg-email').value.trim(),
-        telefono: $('#reg-tel').value.trim()
+        telefono: $('#reg-tel').value.trim(),
+        contrasena: $('#reg-pass').value
       })
     });
-    $('#reg-msg').textContent = 'Registrado: ' + data.nombre;
+    $('#reg-msg').textContent = 'Registrado: ' + (data.nombre || '');
   }catch(err){ $('#reg-msg').textContent = err.message; }
 });
 
-// Login
+// Login (email + contraseña)
 $('#form-login').addEventListener('submit', async (e)=>{
   e.preventDefault();
   try{
@@ -68,10 +70,10 @@ $('#form-login').addEventListener('submit', async (e)=>{
       method:'POST',
       body: JSON.stringify({
         email: $('#log-email').value.trim(),
-        telefono: $('#log-tel').value.trim()
+        contrasena: $('#log-pass').value
       })
     });
-    $('#login-msg').textContent = 'Hola, ' + cliente.nombre;
+    $('#login-msg').textContent = 'Hola, ' + (cliente.nombre || '');
     await cargarOrdenes();
   }catch(err){ $('#login-msg').textContent = err.message; }
 });

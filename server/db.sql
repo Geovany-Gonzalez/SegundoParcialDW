@@ -1,34 +1,41 @@
--- BD: restaurante_ordenes_db (crearla en Render o local)
--- Tablas:
+-- BD: restaurante_ordenes_db
 
+-- ===================
+-- Maestros
+-- ===================
 CREATE TABLE IF NOT EXISTS clientes (
-  id SERIAL PRIMARY KEY,
-  nombre   VARCHAR(100) NOT NULL,
-  email    VARCHAR(120) UNIQUE NOT NULL,
-  telefono VARCHAR(50)  NOT NULL
+  id        SERIAL PRIMARY KEY,
+  nombre    VARCHAR(100) NOT NULL,
+  email     VARCHAR(120) UNIQUE NOT NULL,
+  telefono  VARCHAR(50)  NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS ordenes (
-  id SERIAL PRIMARY KEY,
-  cliente_id   INT NOT NULL REFERENCES clientes(id) ON DELETE CASCADE,
-  plato_nombre VARCHAR(150) NOT NULL,
-  notas        TEXT,
-  estado       VARCHAR(20) NOT NULL DEFAULT 'pending',
-  creado_en    TIMESTAMP DEFAULT NOW()
+  id            SERIAL PRIMARY KEY,
+  plato_nombre  VARCHAR(150) NOT NULL,
+  notas         TEXT,
+  estado        VARCHAR(20)  NOT NULL DEFAULT 'pending',
+  creado_en     TIMESTAMP DEFAULT NOW()
+);
+
+-- ===================
+-- Relación (cliente <-> orden)
+-- 1:N (una orden pertenece a un cliente)
+-- ===================
+CREATE TABLE IF NOT EXISTS cliente_ordenes (
+  cliente_id INT NOT NULL REFERENCES clientes(id) ON DELETE CASCADE,
+  orden_id   INT NOT NULL REFERENCES ordenes(id)  ON DELETE CASCADE,
+  PRIMARY KEY (cliente_id, orden_id),
+  CONSTRAINT unico_cliente_por_orden UNIQUE (orden_id)
 );
 
 -- Índices útiles
-CREATE INDEX IF NOT EXISTS idx_ordenes_cliente ON ordenes(cliente_id);
-CREATE INDEX IF NOT EXISTS idx_ordenes_estado  ON ordenes(estado);
+CREATE INDEX IF NOT EXISTS idx_estado ON ordenes(estado);
 
--- Consultas que usa la API (referencia):
--- Registrar cliente
---  INSERT INTO clientes (nombre,email,telefono) VALUES ($1,$2,$3)
--- Login simulado
---  SELECT id,nombre,email,telefono FROM clientes WHERE email=$1 AND telefono=$2
--- Nueva orden
---  INSERT INTO ordenes (cliente_id,plato_nombre,notas) VALUES ($1,$2,$3)
--- Listar órdenes de un cliente
---  SELECT id,plato_nombre,notas,estado,creado_en FROM ordenes WHERE cliente_id=$1 ORDER BY id DESC
--- Actualizar estado de orden
---  UPDATE ordenes SET estado=$1 WHERE id=$2
+-- ====== Vistas de apoyo (opcionales) ======
+-- Vista que ya “une” para consultas simples
+CREATE OR REPLACE VIEW v_ordenes_por_cliente AS
+SELECT o.id, co.cliente_id, o.plato_nombre, o.notas, o.estado, o.creado_en
+FROM ordenes o
+JOIN cliente_ordenes co ON co.orden_id = o.id
+ORDER BY o.id DESC;

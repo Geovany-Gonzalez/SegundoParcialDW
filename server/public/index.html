@@ -10,6 +10,7 @@
 <header><h1>Restaurante - Órdenes</h1></header>
 
 <main class="grid">
+  <!-- Registro -->
   <section class="card">
     <h2>Registro de cliente</h2>
     <form id="form-register">
@@ -17,34 +18,37 @@
       <input id="reg-email" type="email" placeholder="Email" required/>
       <input id="reg-tel" placeholder="Teléfono" required/>
       <input id="reg-pass" type="password" placeholder="Contraseña" required/>
-      <button>Registrar</button>
+      <button type="submit">Registrar</button>
     </form>
     <div id="reg-msg" class="msg"></div>
   </section>
 
+  <!-- Login -->
   <section class="card">
     <h2>Login</h2>
     <form id="form-login">
       <input id="log-email" type="email" placeholder="Email" required/>
       <input id="log-pass" type="password" placeholder="Contraseña" required/>
-      <button>Entrar</button>
+      <button type="submit">Entrar</button>
     </form>
     <div id="login-msg" class="msg"></div>
   </section>
 
+  <!-- Nueva orden -->
   <section class="card">
     <h2>Nueva orden</h2>
     <form id="form-orden" class="row">
       <input id="plato" placeholder="Plato" required/>
       <input id="notas" placeholder="Notas (opcional)"/>
-      <button>Crear</button>
+      <button type="submit">Crear</button>
     </form>
     <div id="orden-msg" class="msg"></div>
   </section>
 
+  <!-- Mis órdenes -->
   <section class="card">
     <h2>Mis órdenes</h2>
-    <div id="ordenes"></div>
+    <div id="ordenes" class="list"></div>
   </section>
 </main>
 
